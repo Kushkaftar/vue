@@ -54,11 +54,11 @@ var reg = new Vue({
 
                 if (this.token && this.hash && this.quantity_leads && this.checkedGeo.length !== 0) {
 
-                    const prenumber = checksRU.filter(({ value }) => reg.checkedGeo.includes(value));
+                    const prenumber = this.checks.filter(({ value }) => reg.checkedGeo.includes(value));
                     let inquiry = {
-                        token: reg.token,
-                        hash: reg.hash,
-                        quantity_leads: reg.quantity_leads,
+                        token: this.token,
+                        hash: this.hash,
+                        quantity_leads: this.quantity_leads,
                         prenumber: prenumber,
                     };
                     test(inquiry);
@@ -81,7 +81,7 @@ var reg = new Vue({
                     this.errors.push('Required to indicate TOKEN.');
                 }
                 if (!this.hash) {
-                    this.errors.push('Required to indicateь HASH.');
+                    this.errors.push('Required to indicate HASH.');
                 }
                 if (!this.quantity_leads) {
                     this.errors.push('Required to indicate quantity leads.');
@@ -125,14 +125,5 @@ var reg = new Vue({
 
 function test(inquiry) {
     console.log(inquiry);
-    /* const geos = inquiry.geo;
-    console.log(geos);
-    const prenumber = checksRU.filter(({ value }) => geos.includes(value));
-    console.log(prenumber); */
 
-    //geos.forEach(x => (x))
 }
-
-/* function array_diff(a, b) {
-    a.filter(a => b.includes(x));
-} */
