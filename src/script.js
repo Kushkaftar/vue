@@ -39,9 +39,8 @@ var reg = new Vue({
         checkedGeo: [],
 
         errors: [],
-        checksRU,
-        checksEU,
-        checksASIA,
+        checks: [],
+
 
 
 
@@ -100,24 +99,26 @@ var reg = new Vue({
     },
 
     computed: {
-        selectedRU: function () {
-            if (this.GEO === '1') {
-                this.checkedGeo = [];
-                return true;
+        selected: function () {
+            switch (this.GEO) {
+                case '1':
+                    this.checks = checksRU
+                    this.checkedGeo = [];
+                    return true;
+
+                case '2':
+                    this.checks = checksEU
+                    this.checkedGeo = [];
+                    return true;
+
+                case '3':
+                    this.checks = checksASIA
+                    this.checkedGeo = [];
+                    return true;
+
+
             }
         },
-        selectedEU: function () {
-            if (this.GEO === '2') {
-                this.checkedGeo = [];
-                return true;
-            }
-        },
-        selectedASIA: function () {
-            if (this.GEO === '3') {
-                this.checkedGeo = [];
-                return true;
-            }
-        }
     }
 
 })

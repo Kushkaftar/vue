@@ -90,28 +90,8 @@
                     <!-- конец блока выбора ГЕО -->
 
                     <!-- блок чекбоксов -->
-                    <div v-if="selectedRU">
-                        <p v-for="check in checksRU">
-                            <label>
-                                <input type="checkbox" v-bind:id=check.value v-bind:value=check.value
-                                    v-model="checkedGeo" name="geo" />
-                                <span>{{ check.text }}</span>
-                            </label>
-                        </p>
-                        <span>selected: {{ checkedGeo }}</span>
-                    </div>
-                    <div v-if="selectedEU">
-                        <p v-for="check in checksEU">
-                            <label>
-                                <input type="checkbox" v-bind:id=check.value v-bind:value=check.value
-                                    v-model="checkedGeo" name="geo" />
-                                <span>{{ check.text }}</span>
-                            </label>
-                        </p>
-                        <span>selected: {{ checkedGeo }}</span>
-                    </div>
-                    <div v-if="selectedASIA">
-                        <p v-for="check in checksASIA">
+                    <div v-if="selected">
+                        <p v-for="check in checks">
                             <label>
                                 <input type="checkbox" v-bind:id=check.value v-bind:value=check.value
                                     v-model="checkedGeo" name="geo" />
