@@ -1,30 +1,33 @@
+const url = 'http://localhost:8080/api';
+
+
 const checksRU = [
-    { text: 'Russia', value: 'RU', model: '7910numb7' },
-    { text: 'Kazakhstan', value: 'KZ', model: '77numb9' },
-    { text: 'Belarus', value: 'BY', model: '37533numb7' },
-    { text: 'Ukraine', value: 'UA', model: '380numb9' },
-    { text: 'Kyrgyzstan', value: 'KG', model: '996numb9,10' },
-    { text: 'Georgia', value: 'GE', model: '995numb8,10' },
-    { text: 'Azerbaijan', value: 'AZ', model: '994numb9,10' },
-    { text: 'Armenia', value: 'AM', model: '374numb8,9' }
+    { text: 'Russia', geo: 'RU' },
+    { text: 'Kazakhstan', geo: 'KZ' },
+    { text: 'Belarus', geo: 'BY' },
+    { text: 'Ukraine', geo: 'UA' },
+    { text: 'Kyrgyzstan', geo: 'KG' },
+    { text: 'Georgia', geo: 'GE' },
+    { text: 'Azerbaijan', geo: 'AZ' },
+    { text: 'Armenia', geo: 'AM' }
 ];
 
 const checksEU = [
-    { text: 'Italy', value: 'IT' },
-    { text: 'Spain', value: 'ES' },
-    { text: 'Germany', value: 'DE' },
-    { text: 'Poland', value: 'PL' },
-    { text: 'Austria', value: 'AT' },
-    { text: 'Bulgaria', value: 'BG' },
-    { text: 'Romania', value: 'RO' },
-    { text: 'Greece', value: 'GR' },
-    { text: 'Hungary', value: 'HU' }
+    { text: 'Italy', geo: 'IT' },
+    { text: 'Spain', geo: 'ES' },
+    { text: 'Germany', geo: 'DE' },
+    { text: 'Poland', geo: 'PL' },
+    { text: 'Austria', geo: 'AT' },
+    { text: 'Bulgaria', geo: 'BG' },
+    { text: 'Romania', geo: 'RO' },
+    { text: 'Greece', geo: 'GR' },
+    { text: 'Hungary', geo: 'HU' }
 ];
 
 const checksASIA = [
-    { text: 'Thailand', value: 'TH' },
-    { text: 'Indonesia', value: 'ID' },
-    { text: 'Viet Nam', value: 'VN' }
+    { text: 'Thailand', geo: 'TH' },
+    { text: 'Indonesia', geo: 'ID' },
+    { text: 'Viet Nam', geo: 'VN' }
 ];
 
 
@@ -38,10 +41,16 @@ var reg = new Vue({
         GEO: null,
         checkedGeo: [],
 
-        errors: [],
+        responseApiTable: false,
+        responseApi: [],
+
+        loadingAxios: true,
+        errorsAxios: false,
+
+        errorsValidation: [],
         checks: [],
 
-
+        inquiry: {}
 
 
     },
@@ -50,44 +59,59 @@ var reg = new Vue({
         checkForm:
             function (err) {
 
-                this.errors = [];
+                this.errorsValidation = [];
 
                 if (this.token && this.hash && this.quantity_leads && this.checkedGeo.length !== 0) {
 
-                    const prenumber = this.checks.filter(({ value }) => reg.checkedGeo.includes(value));
-                    let inquiry = {
+                    const prenumber = this.checks.filter(({ geo }) => reg.checkedGeo.includes(geo));
+
+                    console.log(prenumber);
+
+                    const countrys = prenumber.map(function (g) {
+                        return (`geo: ${g.geo}`);
+                    });
+
+
+                    console.log(JSON.stringify(countrys));
+                    inquiry = {
                         token: this.token,
                         hash: this.hash,
-                        quantity_leads: this.quantity_leads,
-                        prenumber: prenumber,
+                        quantity_leads: +this.quantity_leads,
+                        country: countrys,
                     };
-                    test(inquiry);
+                    console.log(JSON.stringify(inquiry));
+                    axios({
+                        method: 'post',
+                        url: url,
+                        data: inquiry
+                    })
+                        .then(response => {
+                            this.errorsAxios = false;
+                            this.responseApiTable = true;
+                            this.responseApi = response.data;
+                            console.log(this.responseApi);
+                        })
+                        .catch(error => {
+                            this.errorsAxios = true;
+                            console.log(error);
+                        })
+                        .finally(() => (this.loadingAxios = false));
 
-                    /* response = fetch('/answer', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json;charset=utf-8'
-                        },
-                        body: JSON.stringify(inquiry)
-                    }); */
-
-                    //let json = JSON.stringify(inquiry);
-                    // console.log(inquiry);
                     return true;
                 }
 
 
                 if (!this.token) {
-                    this.errors.push('Required to indicate TOKEN.');
+                    this.errorsValidation.push('Required to indicate TOKEN.');
                 }
                 if (!this.hash) {
-                    this.errors.push('Required to indicate HASH.');
+                    this.errorsValidation.push('Required to indicate HASH.');
                 }
                 if (!this.quantity_leads) {
-                    this.errors.push('Required to indicate quantity leads.');
+                    this.errorsValidation.push('Required to indicate quantity leads.');
                 }
                 if (this.checkedGeo.length === 0) {
-                    this.errors.push('Required to indicate Geo.');
+                    this.errorsValidation.push('Required to indicate Geo.');
                 }
 
 
@@ -119,11 +143,9 @@ var reg = new Vue({
 
             }
         },
-    }
+    },
+
+
 
 })
 
-function test(inquiry) {
-    console.log(inquiry);
-
-}
