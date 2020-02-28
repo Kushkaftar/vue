@@ -67,12 +67,17 @@ var reg = new Vue({
 
                     console.log(prenumber);
 
-                    const countrys = prenumber.map(function (g) {
-                        return (`geo: ${g.geo}`);
-                    });
+                    const countrys = this.checkedGeo.map(v => ({ geo: v }));
+                    /* const countrys1 = countrys.map(v => ({ v }));*/
+                    console.log(countrys)
+                    /* result = countrys.reduce(function (result, item, index) {
+                        if (index !== 0) { //skip the first item
+                            result.push(item);
+                        }
+                        return result;
+                    }, []);
 
-
-                    console.log(JSON.stringify(countrys));
+                    console.log('result' + result); */
                     inquiry = {
                         token: this.token,
                         hash: this.hash,
