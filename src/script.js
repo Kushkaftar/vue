@@ -47,6 +47,7 @@ var reg = new Vue({
         loadingAxios: true,
         errorsAxios: false,
 
+        errQLValid: null,
         errorsValidation: [],
         checks: [],
 
@@ -61,30 +62,18 @@ var reg = new Vue({
 
                 this.errorsValidation = [];
 
-                if (this.token && this.hash && this.quantity_leads && this.checkedGeo.length !== 0) {
-
-                    const prenumber = this.checks.filter(({ geo }) => reg.checkedGeo.includes(geo));
-
-                    console.log(prenumber);
+                if (this.token && this.hash && this.validQA(this.quantity_leads) && this.checkedGeo.length !== 0) {
+                    //const prenumber = this.checks.filter(({ geo }) => reg.checkedGeo.includes(geo));
 
                     const countrys = this.checkedGeo.map(v => ({ geo: v }));
-                    /* const countrys1 = countrys.map(v => ({ v }));*/
-                    console.log(countrys)
-                    /* result = countrys.reduce(function (result, item, index) {
-                        if (index !== 0) { //skip the first item
-                            result.push(item);
-                        }
-                        return result;
-                    }, []);
 
-                    console.log('result' + result); */
                     inquiry = {
                         token: this.token,
                         hash: this.hash,
                         quantity_leads: +this.quantity_leads,
                         country: countrys,
                     };
-                    console.log(JSON.stringify(inquiry));
+
                     axios({
                         method: 'post',
                         url: url,
@@ -107,23 +96,28 @@ var reg = new Vue({
 
 
                 if (!this.token) {
-                    this.errorsValidation.push('Required to indicate TOKEN.');
+                    this.errorsValidation.push('Введите TOKEN.');
                 }
                 if (!this.hash) {
-                    this.errorsValidation.push('Required to indicate HASH.');
+                    this.errorsValidation.push('Введите HASH.');
                 }
                 if (!this.quantity_leads) {
-                    this.errorsValidation.push('Required to indicate quantity leads.');
+                    this.errorsValidation.push('Введите quantity leads.');
                 }
                 if (this.checkedGeo.length === 0) {
-                    this.errorsValidation.push('Required to indicate Geo.');
+                    this.errorsValidation.push('Выберите Geo.');
                 }
-
-
-
                 err.preventDefault();
 
+            },
+
+        validQA: function (quantity_leads) {
+            if (quantity_leads > 0 && quantity_leads < 6) {
+                return true;
+            } else {
+                this.errorsValidation.push('amount 1-5');
             }
+        }
 
     },
 
@@ -144,8 +138,6 @@ var reg = new Vue({
                     this.checks = checksASIA
                     this.checkedGeo = [];
                     return true;
-
-
             }
         },
     },
