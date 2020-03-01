@@ -21,7 +21,9 @@ const checksEU = [
     { text: 'Bulgaria', geo: 'BG' },
     { text: 'Romania', geo: 'RO' },
     { text: 'Greece', geo: 'GR' },
-    { text: 'Hungary', geo: 'HU' }
+    { text: 'Hungary', geo: 'HU' },
+    { text: 'Portugal', geo: 'PT' },
+    { text: 'Cyprus', geo: 'CY' }
 ];
 
 const checksASIA = [
@@ -47,6 +49,7 @@ var reg = new Vue({
         loadingAxios: true,
         errorsAxios: false,
 
+        errTokenValid: null,
         errQLValid: null,
         errorsValidation: [],
         checks: [],
@@ -62,7 +65,10 @@ var reg = new Vue({
 
                 this.errorsValidation = [];
 
-                if (this.token && this.hash && this.validQA(this.quantity_leads) && this.checkedGeo.length !== 0) {
+                if (this.validToken(this.token)
+                    && this.validHash(this.hash)
+                    && this.validQA(this.quantity_leads)
+                    && this.checkedGeo.length !== 0) {
                     //const prenumber = this.checks.filter(({ geo }) => reg.checkedGeo.includes(geo));
 
                     const countrys = this.checkedGeo.map(v => ({ geo: v }));
@@ -83,11 +89,9 @@ var reg = new Vue({
                             this.errorsAxios = false;
                             this.responseApiTable = true;
                             this.responseApi = response.data;
-                            console.log(this.responseApi);
                         })
                         .catch(error => {
                             this.errorsAxios = true;
-                            console.log(error);
                         })
                         .finally(() => (this.loadingAxios = false));
 
@@ -111,13 +115,38 @@ var reg = new Vue({
 
             },
 
-        validQA: function (quantity_leads) {
-            if (quantity_leads > 0 && quantity_leads < 6) {
-                return true;
-            } else {
-                this.errorsValidation.push('amount 1-5');
+        validQA:
+            function (quantity_leads) {
+                if (quantity_leads > 0 && quantity_leads < 6) {
+                    return true;
+                } else {
+                    this.errorsValidation.push('amount 1-5');
+                }
+            },
+
+        validToken:
+            function (token) {
+
+                let regToken = /[[a-z0-9]{26,28}/g;
+
+                if (regToken.test(token)) {
+                    return true;
+                } else {
+                    this.errorsValidation.push('Токен не валиден');
+                }
+            },
+
+        validHash:
+            function (hash) {
+
+                let regHash = /[[a-z0-9]{8}(-[[a-z0-9]{4}){3}-[[a-z0-9]{12}/g;
+
+                if (regHash.test(hash)) {
+                    return true;
+                } else {
+                    this.errorsValidation.push('Хеш не валиден');
+                }
             }
-        }
 
     },
 
