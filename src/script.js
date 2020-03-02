@@ -1,3 +1,4 @@
+
 const url = 'http://localhost:8080/api';
 
 
@@ -31,6 +32,8 @@ const checksASIA = [
     { text: 'Indonesia', geo: 'ID' },
     { text: 'Viet Nam', geo: 'VN' }
 ];
+
+
 
 
 var reg = new Vue({
@@ -92,6 +95,7 @@ var reg = new Vue({
                         })
                         .catch(error => {
                             this.errorsAxios = true;
+                            this.errorsValidation.push(error);
                         })
                         .finally(() => (this.loadingAxios = false));
 

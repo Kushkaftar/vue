@@ -21,21 +21,24 @@
 <body>
 
     <div class="container">
-        <!-- Navigations -->
-        <nav>
-            <div class="nav-wrapper">
 
-                <ul id="nav-mobile" class="left hide-on-med-and-down">
-                    <li><a href="#">веб</a></li>
-                    <li><a href="#">рес</a></li>
-                    <li><a href="#">JavaScript</a></li>
-                </ul>
-            </div>
-        </nav>
-        <!-- End Navigations -->
-        <br>
         <!-- Экземпляр Vue -->
         <div id="app-region">
+
+            <!-- Navigations -->
+            <nav>
+                <div class="nav-wrapper">
+
+                    <ul id="nav-mobile" class="left hide-on-med-and-down">
+                        <li><a href="#">веб</a></li>
+                        <li><a href="#">рес(off)</a></li>
+                        <li><a href="file.html">Upload</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navigations -->
+            <br>
+
 
             <!-- error Axios -->
             <div v-if="errorsAxios" class="card-panel">
